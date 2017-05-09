@@ -1,6 +1,6 @@
 import Expo from 'expo';
 import React from 'react';
-import { StyleSheet, View, Navigator, Text } from 'react-native';
+import { StyleSheet, View, Navigator } from 'react-native';
 import TaskList from './TaskList';
 import TaskForm from './TaskForm';
 
@@ -25,12 +25,25 @@ class PluralTodo extends React.Component {
       name: 'taskform'
     });
   }
+  onAdd(task) {
+    console.log('a task was added: ', task);
+    this.state.todos.push({task: task});
+    this.setState({todos: this.state.todos });
+    this.nav.pop();
+  }
+  onCancel() {
+    console.log('Cancelled!');
+    this.nav.pop();
+  }
 
   renderScene(route, nav) {
     switch(route.name) {
       case 'taskform':
         return (
-          <TaskForm />
+          <TaskForm
+            onAdd={this.onAdd.bind(this)} 
+            onCancel={this.onCancel.bind(this)} 
+          />
         );
          
       default:
@@ -49,7 +62,7 @@ class PluralTodo extends React.Component {
     return (
       <Navigator 
         configureScene={this.configureScene}
-        initialRoute={{ name: 'taskform', index: 0}}
+        initialRoute={{ name: 'tasklist', index: 0}}
         ref={( (nav) => {
           this.nav = nav;
         })}
